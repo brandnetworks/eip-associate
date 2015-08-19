@@ -1,0 +1,7 @@
+FROM flynn/busybox
+
+COPY eip-associate /bin/eip-associate
+
+EXPOSE 8001
+
+ENTRYPOINT ["/bin/eip-associate"]
