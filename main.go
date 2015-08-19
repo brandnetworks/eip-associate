@@ -85,6 +85,7 @@ func main() {
 	for _, ip := range elasticIps {
 		if *publicIpv4 == ip {
 			log.Println("ip already allocated", *publicIpv4, ip)
+			return;
 		}
 	}
 
@@ -94,21 +95,21 @@ func main() {
 		if retries > *maxRetries {
 			log.Fatal("Unable to associate public ip")
 		}
-		_, ok := publicIps[*address.PublicIP]
+		_, ok := publicIps[*address.PublicIp]
 		if ok {
 			if isEipFree(address) {
-				log.Println(*address.PublicIP, "free")
+				log.Println(*address.PublicIp, "free")
 				// attempt association
-				associateAddressReq := ec2.AssociateAddressInput{AllocationID: address.AllocationID, InstanceID: instanceId}
+				associateAddressReq := ec2.AssociateAddressInput{AllocationId: address.AllocationId, InstanceId: instanceId}
 				_, err := svc.AssociateAddress(&associateAddressReq)
 				if err != nil {
 					log.Println(err)
 				} else {
-					log.Println(*address.PublicIP, "associated")
+					log.Println(*address.PublicIp, "associated")
 					break;
 				}
 			} else {
-				log.Println(*address.PublicIP, "not_free")
+				log.Println(*address.PublicIp, "not_free")
 			}
 		}
 		sleepTime := time.Duration(*pause) * time.Second
@@ -118,7 +119,7 @@ func main() {
 }
 
 func isEipFree(address *ec2.Address) (bool) {
-	return (address.InstanceID == nil || address.AllocationID == nil)
+	return (address.InstanceId == nil || address.AllocationId == nil)
 }
 
 // request the content of a http endpoint as a string
