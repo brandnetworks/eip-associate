@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"log"
 	"fmt"
 	"strings"
@@ -45,7 +46,7 @@ func main() {
 	elasticIps := strings.Split(*eips, ",")
 
 	awsConfig := aws.NewConfig().WithRegion((*az)[:len(*az)-1])
-	svc := ec2.New(awsConfig)
+	svc := ec2.New(session.New(), awsConfig)
 
 	log.Println("connected", *az)
 
